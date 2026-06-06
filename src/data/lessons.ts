@@ -3,6 +3,7 @@ export interface Lesson {
   title: string;
   explanation: string;
   examples: string[];
+  exampleAnimals: string[];
   image: string; // Emoji representing the lesson
   miniQuestion: {
     question: string;
@@ -22,6 +23,7 @@ export const lessonsData: Lesson[] = [
       "El perro tiene pelo, patas y cola.",
       "La serpiente tiene escamas y repta."
     ],
+    exampleAnimals: ["pajaro", "pez", "perro", "serpiente"],
     image: "🐾",
     miniQuestion: {
       question: "¿Qué animal tiene alas y plumas?",
@@ -40,6 +42,7 @@ export const lessonsData: Lesson[] = [
       "La serpiente repta.",
       "La rana puede saltar y nadar."
     ],
+    exampleAnimals: ["perro", "pajaro", "pez", "serpiente", "rana"],
     image: "🏃‍♀️",
     miniQuestion: {
       question: "¿Cómo se mueve una serpiente?",
@@ -52,12 +55,11 @@ export const lessonsData: Lesson[] = [
     title: "Cómo nacen",
     explanation: "Algunos animales nacen del vientre de su madre. Se llaman vivíparos. Otros animales nacen de huevos. Se llaman ovíparos.",
     examples: [
-      "El perro es vivíparo.",
-      "El gato es vivíparo.",
-      "La gallina es ovípara.",
-      "El pájaro es ovíparo.",
+      "El perro y el gato son vivíparos.",
+      "La gallina y el pájaro son ovíparos.",
       "La tortuga es ovípara."
     ],
+    exampleAnimals: ["perro", "gato", "gallina", "pajaro", "tortuga"],
     image: "🥚",
     miniQuestion: {
       question: "¿Cómo llamamos a los animales que nacen de huevos?",
@@ -71,11 +73,10 @@ export const lessonsData: Lesson[] = [
     explanation: "Los animales comen cosas diferentes.\n- Carnívoros: comen otros animales.\n- Herbívoros: comen plantas, frutos o semillas.\n- Omnívoros: comen plantas y también otros animales.",
     examples: [
       "El león es carnívoro.",
-      "La vaca es herbívora.",
-      "El cerdo es omnívoro.",
-      "La gallina es omnívora.",
-      "El conejo es herbívoro."
+      "La vaca y el conejo son herbívoros.",
+      "El cerdo y la gallina son omnívoros."
     ],
+    exampleAnimals: ["leon", "vaca", "conejo", "cerdo", "gallina"],
     image: "🍃",
     miniQuestion: {
       question: "Si una vaca come hierba, ¿qué es?",
@@ -88,13 +89,11 @@ export const lessonsData: Lesson[] = [
     title: "Domésticos y salvajes",
     explanation: "Algunos animales viven cerca de las personas y pueden recibir cuidados. Son domésticos. Otros animales viven en la naturaleza. Son salvajes.",
     examples: [
-      "El perro es doméstico.",
-      "El gato es doméstico.",
-      "La vaca es doméstica.",
-      "El tigre es salvaje.",
-      "El león es salvaje.",
-      "La jirafa es salvaje."
+      "El perro y el gato son domésticos.",
+      "La vaca es doméstica y vive en la granja.",
+      "El tigre, el león y la jirafa son salvajes."
     ],
+    exampleAnimals: ["perro", "gato", "vaca", "tigre", "leon", "jirafa"],
     image: "🏡",
     miniQuestion: {
       question: "¿Qué animal es un animal salvaje?",
