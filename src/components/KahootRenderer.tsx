@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Exercise } from '../data/exerciseGenerators';
 import { useSpeech } from '../hooks/useSpeech';
@@ -30,10 +30,46 @@ export function KahootRenderer({ exercise, onComplete }: Props) {
   const [hasError, setHasError] = useState(false);
   const [attempts, setAttempts] = useState(0);
   const [isCorrect, setIsCorrect] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(20);
+  const [isTimeout, setIsTimeout] = useState(false);
   const { speak } = useSpeech();
 
+  useEffect(() => {
+    setTimeLeft(20);
+    setIsTimeout(false);
+    setSelected(null);
+    setHasError(false);
+    setAttempts(0);
+    setIsCorrect(false);
+  }, [exercise]);
+
+  // Handle timer
+  useEffect(() => {
+    if (isCorrect || hasError || isTimeout) return;
+    
+    if (timeLeft <= 0) {
+      handleTimeout();
+      return;
+    }
+
+    const timer = setInterval(() => {
+      setTimeLeft(prev => prev - 1);
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [timeLeft, isCorrect, hasError, isTimeout]);
+
+  const handleTimeout = () => {
+    setIsTimeout(true);
+    playErrorSound();
+    speak("Se acabó el tiempo.");
+    setTimeout(() => {
+      onComplete(false);
+    }, 3000);
+  };
+
   const handleSelect = (option: string) => {
-    if (isCorrect) return;
+    if (isCorrect || isTimeout) return;
     
     setSelected(option);
     
@@ -49,7 +85,6 @@ export function KahootRenderer({ exercise, onComplete }: Props) {
       speak("¡Correcto!");
       setTimeout(() => {
         onComplete(attempts === 0);
-        resetState();
       }, 3000); // Give user enough time to see the answer and effect
     } else {
       setHasError(true);
@@ -61,13 +96,6 @@ export function KahootRenderer({ exercise, onComplete }: Props) {
         setSelected(null);
       }, 1500);
     }
-  };
-
-  const resetState = () => {
-    setSelected(null);
-    setHasError(false);
-    setAttempts(0);
-    setIsCorrect(false);
   };
 
   const readAloud = () => {
@@ -91,6 +119,11 @@ export function KahootRenderer({ exercise, onComplete }: Props) {
             className="absolute inset-0 bg-green-500 rounded-full z-0 pointer-events-none"
           />
         )}
+        
+        <div className={`absolute top-4 left-4 ${timeLeft <= 5 ? 'bg-red-600 border-red-800 animate-pulse' : 'bg-purple-600 border-purple-800'} text-white w-14 h-14 md:w-16 md:h-16 rounded-full flex items-center justify-center font-extrabold text-2xl md:text-3xl shadow-lg border-4 z-20 transition-colors`}>
+          {timeLeft}
+        </div>
+
         <button onClick={readAloud} className="absolute top-4 right-4 p-3 bg-gray-100 rounded-full text-gray-600 hover:bg-gray-300 active:scale-95 transition-transform z-20">
            <Volume2 className="w-8 h-8" />
         </button>
@@ -99,7 +132,7 @@ export function KahootRenderer({ exercise, onComplete }: Props) {
             {exercise.image}
           </div>
         )}
-        <h2 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-center text-gray-800 leading-snug z-10 relative px-12">
+        <h2 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-center text-gray-800 leading-snug z-10 relative px-12 mt-8 md:mt-2">
           {exercise.question}
         </h2>
       </div>
@@ -140,7 +173,18 @@ export function KahootRenderer({ exercise, onComplete }: Props) {
 
       {/* Screen Overlay for Feedback */}
       <AnimatePresence>
-        {hasError && (
+        {isTimeout && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 bg-purple-600/95 flex flex-col items-center justify-center backdrop-blur-sm"
+          >
+            <div className="text-[10rem] text-white leading-none drop-shadow-2xl">⏳</div>
+            <h2 className="text-5xl md:text-7xl text-white font-extrabold mt-4 text-center px-4 drop-shadow-xl">¡Se acabó el tiempo!</h2>
+          </motion.div>
+        )}
+        {hasError && !isTimeout && (
           <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
