@@ -1,0 +1,6 @@
+{
+  "name": "Animalia: Misión Animales",
+  "description": "Aventura educativa infantil de Ciencias Naturales para aprender sobre los animales.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
